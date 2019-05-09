@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public class DeptServiceImpl implements DeptService {
+
     @Autowired
     private DeptDao dao;
 

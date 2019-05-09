@@ -40,12 +40,12 @@ public class DeptController_Consumer {
         return restTemplate.getForObject(REST_URL_PREFIX + "/dept/list", List.class);
     }
 
-    /*
+
     //测试@EnableDiscoveryClient,消费端可以调用服务发现
     @RequestMapping(value = "/consumer/dept/discovery")
     public Object discovery()
     {
         return restTemplate.getForObject(REST_URL_PREFIX + "/dept/discovery", Object.class);
     }
-    */
+
 }

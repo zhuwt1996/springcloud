@@ -4,14 +4,15 @@
 
 <mapper namespace="com.pagoda.springcloud.dao.DeptDao">
 
-    <select id="findById" resultType="Dept" parameterType="Long">
+    <select id="findById" resultType="com.springcloud.api.entity.Dept" parameterType="Long">
 		select deptno,dname,db_source from dept where deptno=#{deptno};
 	</select>
-    <select id="findAll" resultType="Dept">
+    <select id="findAll" resultType="com.springcloud.api.entity.Dept">
 		select deptno,dname,db_source from dept;
 	</select>
-    <insert id="addDept" parameterType="Dept">
+    <insert id="addDept" parameterType="com.springcloud.api.entity.Dept">
 		INSERT INTO dept(dname,db_source) VALUES(#{dname},DATABASE());
 	</insert>
+
 
 </mapper>

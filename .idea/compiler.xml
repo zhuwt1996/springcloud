@@ -8,6 +8,9 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shop-api" />
         <module name="shop-consumer-dept-80" />
+        <module name="shop-eureka-7001" />
+        <module name="shop-eureka-7002" />
+        <module name="shop-eureka-7003" />
         <module name="shop-provider-dept-8001" />
       </profile>
     </annotationProcessing>
