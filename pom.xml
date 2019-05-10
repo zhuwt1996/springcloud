@@ -17,6 +17,7 @@
         <module>shop-provider-dept-8002</module>
         <module>shop-provider-dept-8003</module>
         <module>shopconsumer80-feign-app</module>
+        <module>shop-provider-dept-hystrix-8001</module>
     </modules>
     <packaging>pom</packaging>
 
