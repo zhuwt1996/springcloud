@@ -2,7 +2,7 @@ package com.pagoda.springcloud.service.impl;
 
 import com.pagoda.springcloud.dao.DeptDao;
 import com.pagoda.springcloud.service.DeptService;
-import com.springcloud.api.entity.Dept;
+import com.pagoda.springcloud.api.entity.Dept;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

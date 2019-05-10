@@ -1,6 +1,6 @@
 package com.pagoda.springcloud.controller;
 
-import com.springcloud.api.entity.Dept;
+import com.pagoda.springcloud.api.entity.Dept;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

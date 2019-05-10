@@ -1,6 +1,6 @@
 package com.pagoda.springcloud.dao;
 
-import com.springcloud.api.entity.Dept;
+import com.pagoda.springcloud.api.entity.Dept;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.pagoda.springcloud.service;
 
-import com.springcloud.api.entity.Dept;
+import com.pagoda.springcloud.api.entity.Dept;
 
 import java.util.List;
 
