@@ -20,6 +20,8 @@
         <module>shop-provider-dept-hystrix-8001</module>
         <module>shop-consumer-dept-hystrix-dashboard</module>
         <module>shop-zuul-gateway-9527</module>
+        <module>shop-config-3344</module>
+        <module>shop-config-client-3355</module>
     </modules>
     <packaging>pom</packaging>
 
