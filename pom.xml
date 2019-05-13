@@ -22,6 +22,8 @@
         <module>shop-zuul-gateway-9527</module>
         <module>shop-config-3344</module>
         <module>shop-config-client-3355</module>
+        <module>shop-config-eureka-client-7001</module>
+        <module>shop-config-dept-client-8001</module>
     </modules>
     <packaging>pom</packaging>
 
