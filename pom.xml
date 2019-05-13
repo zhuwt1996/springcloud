@@ -19,6 +19,7 @@
         <module>shopconsumer80-feign-app</module>
         <module>shop-provider-dept-hystrix-8001</module>
         <module>shop-consumer-dept-hystrix-dashboard</module>
+        <module>shop-zuul-gateway-9527</module>
     </modules>
     <packaging>pom</packaging>
 
