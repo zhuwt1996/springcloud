@@ -336,7 +336,7 @@ eureka:
       defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/ #集群
 ```
 
-### 7.与zookeeper比较
+### 7.※与zookeeper比较
 
 著名的CAP理论指出，一个分布式系统不可能同时满足C(一致性)、A(可用性)和P(分区容错性)。由于分区容错性P在是分布式系统中必须要保证的，因此我们只能在A和C之间进行权衡。
 **Zookeeper保证的是CP,Eureka则是AP。**
@@ -743,12 +743,159 @@ http://localhost:8001/hystrix.stream监控窗口参数：
 
 曲线：用来记录**2分钟内流量的相对变化**，可以通过它来观察到流量的上升和下降趋势。
 
-## 八、Zuul
+## 八、Zuul 路由网关
 
+### 1.是什么
 
+Zuul包含了对请求的**路由和过滤**两个最主要的功能。其中路由功能负责将外部请求转发到具体的微服务实例上，是**实现外部访问统一入口**的基础而过滤器功能则负责对请求的处理过程进行干预，是实现请求校验、服务聚合等功能的基础.Zuul和Eureka进行整合，将Zuul自身注册为Eureka服务治理下的应用，同时从Eureka中获得其他微服务的消息，也即以后的访问微服务都是通过Zuul跳转后获得。
 
-## 九、Config
+注意：Zuul服务最终还是会注册进Eureka
 
+提供=**代理+路由+过滤**三大功能
 
+官网资料：https://github.com/Netflix/zuul/wiki/Getting-Started
 
-## 十、相关面试题
+### 2.路由基本配置
+
+pom
+
+```xml
+<!-- zuul路由网关 -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zuul</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-eureka</artifactId>
+</dependency>
+```
+
+主启动类：**@EnableZuulProxy**
+
+### 3.路由访问映射规则
+
+**代理名称：**
+
+```yaml
+zuul:
+  routes:
+    mydept.serviceId: shopspringcloud-dept
+    mydept.path: /mydept/**
+```
+
+before
+http://myzuul.com:9527/microservicecloud-dept/dept/get/2
+
+after
+http://myzuul.com:9527/mydept/dept/get/1
+
+**原真实服务名忽略**
+
+```yaml
+zuul:
+  ignored-services: shopspringcloud-dept
+```
+
+单个具体，多个可以用"*"
+
+**设置统一公共前缀**
+
+```yaml
+zuul:
+  prefix: /pagoda
+```
+
+## 九、Config 分布式配置中心
+
+### 1.概述
+
+分布式系统面临的配置问题
+
+ 微服务意味着要将单体应用中的业务拆分成一个个子服务，每个服务的粒度相对较小，因此系统中会出现大量的服务。由于每个服务都需要必要的配置信息才能运行，所以一套**集中式的、动态的配置管理设施**是必不可少的。
+
+SpringCloud Config为微服务架构中的微服务提供**集中化的外部配置支持**，配置服务器为各个不同微服务应用的所有环境提供了一个中心化的外部配置。
+
+SpringCloud Config分为**服务端和客户端**两部分。
+
+**服务端也称为分布式配置中心**，它是一个独立的微服务应用，用来连接配置服务器并为客户端提供获取配置信息，加密/解密信息等访问接口
+
+**客户端则是通过指定的配置中心来管理应用资源，以及与业务相关的配置内容，并在启动的时候从配置中心获取和加载配置信息配置服务器默认采用git来存储配置信息，**这样就有助于对环境配置进行版本管理，并且可以通过git客户端工具来方便的管理和访问配置内容。
+
+- 集中管理配置文件
+- 不同环境不同配置，动态化的配置更新，分环境部署比如dev/test/prod/beta/release
+- 运行期间动态调整配置，不再需要在每个服务部署的机器上编写配置文件，服务会向配置中心统一拉取配置自己的信息
+- 当配置发生变动时，服务不需要重启即可感知到配置的变化并应用新的配置
+- 将配置信息以REST接口的形式暴露
+- 由于SpringCloud Config默认使用Git来存储配置文件(也有其它方式,比如支持SVN和本地文件)，
+  但最推荐的还是Git，而且使用的是http/https访问的形式
+
+### 2.SpringCloud Config服务端配置
+
+pom
+
+```xml
+<!-- springCloud Config -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
+```
+
+yml
+
+```yaml
+spring:
+  application:
+    name:  shop-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/zhuwt1996/springcloud-config.git
+```
+
+主启动类**@EnableConfigServer**
+
+通过Config微服务是否可以从GitHub上获取配置内容
+
+**配置读取规则**
+
+/{application}-{profile}.yml
+
+/{application}/{profile}[/{label}]
+
+/{label}/{application}-{profile}.yml
+
+### 3.SpringCloud Config客户端配置
+
+pom
+
+```xml
+<!-- SpringCloud Config客户端 -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-config</artifactId>
+</dependency>
+```
+
+bootstrap.yml
+
+applicaiton.yml是**用户级的资源配置项**
+bootstrap.yml是**系统级的，优先级更加高**
+
+Spring Cloud会创建一个**Bootstrap Context**，作为Spring应用的Application Context的**父上下文**。初始化的时候，Bootstrap Context负责从外部源加载配置属性并解析配置。这两个上下文共享一个从外部获取的Environment。Bootstrap属性有高优先级，默认情况下，它们**不会被本地配置覆盖**。 Bootstrap context和Application Context有着不同的约定，
+所以新增了一个bootstrap.yml文件，保证Bootstrap Context和Application Context配置的分离。
+
+```yaml
+spring:
+  cloud:
+    config:
+      name: shop-config-client #需要从github上读取的资源名称，注意没有yml后缀名
+      profile: dev   #本次访问的配置项
+      label: master
+      uri: http://config-3344.com:3344  #本微服务启动后先去找3344号服务，通过SpringCloudConfig获取GitHub的服务地址
+```
+
+bootstrap.yml里面的profile值是什么，决定从github上读取什么
+
